@@ -43,17 +43,24 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/FruitsOfTheSpirit.loader.js";
+      var cacheVersion = new URLSearchParams(window.location.search).get("v") || Date.now().toString();
+      function versioned(url) {
+        return url + "?v=" + encodeURIComponent(cacheVersion);
+      }
+      var loaderUrl = versioned(buildUrl + "/FruitsOfTheSpirit.loader.js");
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/FruitsOfTheSpirit.data",
-        frameworkUrl: buildUrl + "/FruitsOfTheSpirit.framework.js",
-        codeUrl: buildUrl + "/FruitsOfTheSpirit.wasm",
+        dataUrl: versioned(buildUrl + "/FruitsOfTheSpirit.data"),
+        frameworkUrl: versioned(buildUrl + "/FruitsOfTheSpirit.framework.js"),
+        codeUrl: versioned(buildUrl + "/FruitsOfTheSpirit.wasm"),
         streamingAssetsUrl: "StreamingAssets",
         companyName: "First Bloom Games",
         productName: "Fruit of the Spirit Orchard Bloom",
         productVersion: "0.1.0",
-        showBanner: unityShowBanner
+        showBanner: unityShowBanner,
+        cacheControl: function(url) {
+          return "no-store";
+        }
       };
 
       config.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
